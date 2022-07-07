@@ -10,13 +10,13 @@ import {
 export const flashcardResolvers = {
 	Query: {
 		flashcard: async (_, { id }) => {
-			return queryFlashcard(id);
+			return await queryFlashcard(id);
 		},
 		flashcards: async () => {
-			return queryAllFlashcards();
+			return await queryAllFlashcards();
 		},
 		flashcardsFromDeck: async (_, { deckID }) => {
-			return queryFlashcardsFromDeck(deckID);
+			return await queryFlashcardsFromDeck(deckID);
 		},
 	},
 	Mutation: {
@@ -24,7 +24,7 @@ export const flashcardResolvers = {
 			_,
 			{ question, answer, imageURL, audioURL, deckID }
 		) => {
-			return createFlashcard(
+			return await createFlashcard(
 				question,
 				answer,
 				imageURL,
@@ -34,19 +34,19 @@ export const flashcardResolvers = {
 		},
 		updateFlashcard: async (
 			_,
-			{ id, question, answer, imageURL, audioURL, deckID }
+			{ id, question, answer, imageURL, audioURL }
 		) => {
-			return updateFlashcard(
+			return await updateFlashcard(
 				id,
 				question,
 				answer,
 				imageURL,
-				audioURL,
-				deckID
+				audioURL
 			);
 		},
 		deleteFlashcard: async (_, { id }) => {
-			return deleteFlashcard(id);
+			await deleteFlashcard(id);
+			return {};
 		},
 	},
 };

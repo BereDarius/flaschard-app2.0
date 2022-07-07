@@ -5,6 +5,8 @@ import {
 	createComment,
 	updateComment,
 	deleteComment,
+	likeComment,
+	unlikeComment,
 } from "../controllers/commentController.js";
 
 export const commentResolvers = {
@@ -46,7 +48,14 @@ export const commentResolvers = {
 			);
 		},
 		deleteComment: async (_, { id }) => {
-			return await deleteComment(id);
+			await deleteComment(id);
+			return {};
+		},
+		likeComment: async (_, { id }) => {
+			return await likeComment(id);
+		},
+		unlikeComment: async (_, { id }) => {
+			return await unlikeComment(id);
 		},
 	},
 };

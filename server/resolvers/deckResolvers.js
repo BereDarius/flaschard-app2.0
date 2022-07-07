@@ -47,7 +47,8 @@ export const deckResolvers = {
 			);
 		},
 		deleteDeck: async (_, { id }) => {
-			return await deleteDeck(id);
+			await deleteDeck(id);
+			return {};
 		},
 	},
 };

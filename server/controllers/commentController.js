@@ -4,14 +4,23 @@ import Comment from "../models/Comment.js";
 	QUERY FUNCTIONS
 */
 
+/*
+	Query comment by id
+*/
 export const queryComment = (id) => {
 	return Comment.findById(id);
 };
 
+/*
+	Query all comments
+*/
 export const queryAllComments = () => {
 	return Comment.find();
 };
 
+/*
+	Query all comments of a user
+*/
 export const queryCommentsFromDeck = (deckID) => {
 	return Comment.find({ deckID });
 };
@@ -20,6 +29,9 @@ export const queryCommentsFromDeck = (deckID) => {
 	MUTATION FUNCTIONS
 */
 
+/*
+	Function to create a comment
+*/
 export const createComment = async (
 	text,
 	numberOfLikes,
@@ -27,6 +39,7 @@ export const createComment = async (
 	deckID,
 	userID
 ) => {
+	// create the comment
 	const comment = new Comment({
 		text,
 		numberOfLikes,
@@ -35,52 +48,90 @@ export const createComment = async (
 		userID,
 	});
 	await comment.save();
+
+	// return the comment
 	return comment;
 };
 
-export const updateComment = async (
-	id,
-	text,
-	numberOfLikes,
-	replies,
-	deckID,
-	userID
-) => {
+/*
+	Function to update a comment
+*/
+export const updateComment = async (id, text, numberOfLikes) => {
+	// update the comment
 	const comment = await Comment.findByIdAndUpdate(id, {
 		text,
 		numberOfLikes,
-		replies,
-		deckID,
-		userID,
 	});
+
+	// return the comment
 	return comment;
 };
 
+/*
+	Function to delete a comment
+*/
 export const deleteComment = async (id) => {
 	const comment = await Comment.findById(id);
-	await removeCommentAndReplies(comment);
-	return comment;
+
+	// delete the comment and its replies
+	await deleteCommentAndReplies(comment);
 };
 
 /*
 	FUNCTIONS USED IN OTHER CONTROLLERS (NOT RESOLVERS)
 */
 
+/*
+	Function to delete all comments from a deck
+*/
 export const deleteCommentsFromDeck = async (deckID) => {
 	const comments = await Comment.find({ deckID });
+
+	// delete all comments and their replies
 	comments.forEach(async (comment) => {
-		await removeCommentAndReplies(comment);
+		await deleteCommentAndReplies(comment);
 	});
-	return comments;
 };
 
 /*
 	HELPER FUNCTIONS
 */
 
-export const removeCommentAndReplies = async (comment) => {
+/*
+	Function to delete a comment and its replies
+*/
+export const deleteCommentAndReplies = async (comment) => {
+	// delete all replies of this comment
 	comment.replies.forEach(async (reply) => {
-		await removeCommentAndReplies(reply);
+		await deleteCommentAndReplies(reply);
 	});
+
+	// delete the comment
 	await comment.remove();
+};
+
+/*
+	Function to like a comment
+*/
+export const likeComment = async (id) => {
+	// update the comment
+	const comment = await Comment.findByIdAndUpdate(id, {
+		numberOfLikes: 1,
+	});
+
+	// return the comment
+	return comment;
+};
+
+/*
+	Function to unlike a comment
+*/
+export const unlikeComment = async (id) => {
+	// update the comment
+	const comment = await Comment.findByIdAndUpdate(id, {
+		numberOfLikes: -1,
+	});
+
+	// return the comment
+	return comment;
 };

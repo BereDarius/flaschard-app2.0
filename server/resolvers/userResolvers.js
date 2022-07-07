@@ -65,7 +65,8 @@ export const userResolvers = {
 			return await unfollowUser(currentUserID, unfollowedUserID);
 		},
 		deleteAccount: async (_, { id }) => {
-			return await deleteAccount(id);
+			await deleteAccount(id);
+			return {};
 		},
 	},
 };

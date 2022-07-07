@@ -27,7 +27,8 @@ export const notificationResolvers = {
 			return await readNotification(id);
 		},
 		deleteNotification: async (_, { id }) => {
-			return await deleteNotification(id);
+			await deleteNotification(id);
+			return {};
 		},
 	},
 };
